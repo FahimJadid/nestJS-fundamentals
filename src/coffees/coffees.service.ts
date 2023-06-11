@@ -9,6 +9,7 @@ import { Coffee } from './entities/coffee.entity';
 import { Model } from 'mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 
 // Sample implementation without a real database
 // Services hold the meat of our business logic along with interactions with data sources
@@ -18,8 +19,9 @@ export class CoffeesService {
   constructor(
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
   ) {}
-  findAll() {
-    return this.coffeeModel.find().exec();
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
+    return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
   async findOne(id: string) {
