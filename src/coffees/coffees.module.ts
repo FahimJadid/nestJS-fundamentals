@@ -4,6 +4,9 @@ import { CoffeesService } from './coffees.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Coffee, CoffeeSchema } from './entities/coffee.entity';
 import { Event, EventSchema } from './entities/event.entity';
+import { ConfigModule } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
+
 // import { COFFEE_BRANDS } from './coffees.constants';
 
 // class MockCoffeesService {}
@@ -18,6 +21,7 @@ import { Event, EventSchema } from './entities/event.entity';
       { name: Coffee.name, schema: CoffeeSchema },
       { name: Event.name, schema: EventSchema },
     ]),
+    ConfigModule.forFeature(coffeesConfig),
   ],
 
   controllers: [CoffeesController],

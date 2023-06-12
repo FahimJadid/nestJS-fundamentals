@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 import { CoffeesModule } from './coffees/coffees.module';
+import appConfig from './config/app.config';
 // console.log('process.env.DATABASE_URL', process.env.DATABASE_URL);
 
 // const databaseString = process.env.DATABASE_URL;
@@ -13,15 +14,18 @@ import { CoffeesModule } from './coffees/coffees.module';
 
 @Module({
   imports: [
+    // ConfigModule.forRoot({
+    //   validationSchema: Joi.object({
+    //     DB_TYPE: Joi.string().required(),
+    //     DB_USERNAME: Joi.string().required(),
+    //     DB_PASSWORD: Joi.string().required(),
+    //     DB_HOST: Joi.string().required(),
+    //     DB_NAME: Joi.string().required(),
+    //     DB_OPTIONS: Joi.string().required(),
+    //   }),
+    // }),
     ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        DB_TYPE: Joi.string().required(),
-        DB_USERNAME: Joi.string().required(),
-        DB_PASSWORD: Joi.string().required(),
-        DB_HOST: Joi.string().required(),
-        DB_NAME: Joi.string().required(),
-        DB_OPTIONS: Joi.string().required(),
-      }),
+      load: [appConfig],
     }),
     CoffeesModule,
     // MongooseModule.forRoot(databaseUrl), // local

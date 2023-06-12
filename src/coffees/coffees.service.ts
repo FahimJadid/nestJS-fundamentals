@@ -11,6 +11,8 @@ import { Connection, Model } from 'mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
+import { ConfigService, ConfigType } from '@nestjs/config';
+import coffeesConfig from './config/coffees.config';
 // import { COFFEE_BRANDS } from './coffees.constants';
 
 // Sample implementation without a real database
@@ -22,9 +24,14 @@ export class CoffeesService {
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
     @InjectConnection() private readonly connection: Connection,
     @InjectModel(Event.name) private readonly eventModel: Model<Event>, // Non ClassBased Provider
-  ) // @Inject(COFFEE_BRANDS) coffeeBrands: string[],
-  {
+    // private readonly configService: ConfigService, // @Inject(COFFEE_BRANDS) coffeeBrands: string[],
+    @Inject(coffeesConfig.KEY)
+    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
+  ) {
     // console.log(coffeeBrands);
+    // const databaseHost = this.configService.get('database.host');
+    // console.log(databaseHost);
+    console.log(coffeesConfiguration.foo);
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
