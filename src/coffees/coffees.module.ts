@@ -4,6 +4,14 @@ import { CoffeesService } from './coffees.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Coffee, CoffeeSchema } from './entities/coffee.entity';
 import { Event, EventSchema } from './entities/event.entity';
+// import { COFFEE_BRANDS } from './coffees.constants';
+
+// class MockCoffeesService {}
+
+// class ConfigService {}
+// class DevelopmentConfigService {}
+// class ProductionConfigService {}
+
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -14,5 +22,33 @@ import { Event, EventSchema } from './entities/event.entity';
 
   controllers: [CoffeesController],
   providers: [CoffeesService],
+  // Mock value based provider
+  // providers: [{ provide: CoffeesService, useValue: new MockCoffeesService() }],
+  // Non classBased Provider
+  // providers: [
+  //   CoffeesService,
+  //   { provide: COFFEE_BRANDS, useValue: ['buddy brew', 'nescafe'] },
+  // ],
+
+  // UseClass Providers
+  // providers: [
+  //   CoffeesService,
+  //   {
+  //     provide: ConfigService,
+  //     useClass:
+  //       process.env.NODE_ENV === 'development'
+  //         ? DevelopmentConfigService
+  //         : ProductionConfigService,
+  //   },
+  // ],
+
+  // Factory Providers
+  // Non classBased Provider
+  // providers: [
+  //   CoffeesService,
+  //   { provide: COFFEE_BRANDS, useFactory: () => ['buddy brew', 'nescafe'] },
+  // ],
+
+  exports: [CoffeesService],
 })
 export class CoffeesModule {}

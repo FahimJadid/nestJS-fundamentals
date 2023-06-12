@@ -1,6 +1,7 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { Connection, Model } from 'mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
+// import { COFFEE_BRANDS } from './coffees.constants';
 
 // Sample implementation without a real database
 // Services hold the meat of our business logic along with interactions with data sources
@@ -19,8 +21,12 @@ export class CoffeesService {
   constructor(
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
     @InjectConnection() private readonly connection: Connection,
-    @InjectModel(Event.name) private readonly eventModel: Model<Event>,
-  ) {}
+    @InjectModel(Event.name) private readonly eventModel: Model<Event>, // Non ClassBased Provider
+  ) // @Inject(COFFEE_BRANDS) coffeeBrands: string[],
+  {
+    // console.log(coffeeBrands);
+  }
+
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
     return this.coffeeModel.find().skip(offset).limit(limit).exec();
