@@ -37,6 +37,7 @@ export class CoffeesService {
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
+    // return this.coffeeModel.find().skip(parsedOffset).limit(parsedLimit).exec();
     return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
