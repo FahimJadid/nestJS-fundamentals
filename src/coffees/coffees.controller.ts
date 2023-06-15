@@ -24,8 +24,8 @@ export class CoffeesController {
   // to inject a provider we can use constructors!
   constructor(private readonly coffeesService: CoffeesService) {}
 
-  @UsePipes(ValidationPipe)
   @ApiForbiddenResponse({ description: 'Forbidden' })
+  @UsePipes(ValidationPipe)
   @Public()
   @Get()
   findAll(@Query() paginationQuery: PaginationQueryDto) {

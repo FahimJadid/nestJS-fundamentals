@@ -40,40 +40,13 @@ export class CoffeesService {
     return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
-  // async findOne(id: string) {
-  //   try {
-  //     const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
-  //     return coffee;
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  //   // if (!coffee) {
-  //   //   // throw new HttpException(`Coffee #${id} not found`, HttpStatus.NOT_FOUND);
-  //   //   throw new NotFoundException(`Coffee #${id} not found`);
-  //   // }
-  // }
-
-  // async findOne(id: string) {
-  //   try {
-  //     const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
-
-  //     if (!coffee) {
-  //       throw new NotFoundException(`Coffee with ID ${id} not found`);
-  //     }
-
-  //     return coffee;
-  //   } catch (err) {
-  //     console.log(err);
-  //     throw new NotFoundException(`Coffee with ID ${id} not found`);
-  //   }
-  // }
-
   async findOne(id: string) {
-    const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
-    if (!coffee) {
+    try {
+      const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
+      return coffee;
+    } catch (error) {
       throw new NotFoundException(`Coffee #${id} not found`);
     }
-    return coffee;
   }
 
   create(createCoffeeDto: CreateCoffeeDto) {
