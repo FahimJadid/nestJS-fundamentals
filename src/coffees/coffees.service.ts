@@ -7,12 +7,13 @@ import {
 } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Coffee } from './entities/coffee.entity';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, ObjectId } from 'mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
 import { ConfigService, ConfigType } from '@nestjs/config';
 import coffeesConfig from './config/coffees.config';
+import { Event } from './entities/event.entity';
 // import { COFFEE_BRANDS } from './coffees.constants';
 
 // Sample implementation without a real database
@@ -31,7 +32,7 @@ export class CoffeesService {
     // console.log(coffeeBrands);
     // const databaseHost = this.configService.get('database.host');
     // console.log(databaseHost);
-    console.log(coffeesConfiguration.foo);
+    // console.log(coffeesConfiguration.foo);
   }
 
   findAll(paginationQuery: PaginationQueryDto) {
@@ -39,10 +40,37 @@ export class CoffeesService {
     return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
+  // async findOne(id: string) {
+  //   try {
+  //     const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
+  //     return coffee;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  //   // if (!coffee) {
+  //   //   // throw new HttpException(`Coffee #${id} not found`, HttpStatus.NOT_FOUND);
+  //   //   throw new NotFoundException(`Coffee #${id} not found`);
+  //   // }
+  // }
+
+  // async findOne(id: string) {
+  //   try {
+  //     const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
+
+  //     if (!coffee) {
+  //       throw new NotFoundException(`Coffee with ID ${id} not found`);
+  //     }
+
+  //     return coffee;
+  //   } catch (err) {
+  //     console.log(err);
+  //     throw new NotFoundException(`Coffee with ID ${id} not found`);
+  //   }
+  // }
+
   async findOne(id: string) {
     const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
     if (!coffee) {
-      // throw new HttpException(`Coffee #${id} not found`, HttpStatus.NOT_FOUND);
       throw new NotFoundException(`Coffee #${id} not found`);
     }
     return coffee;

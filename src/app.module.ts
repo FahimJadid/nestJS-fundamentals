@@ -1,5 +1,5 @@
 import * as Joi from 'joi';
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
@@ -7,6 +7,9 @@ import { AppService } from './app.service';
 import { CoffeeRatingModule } from './coffee-rating/coffee-rating.module';
 import { CoffeesModule } from './coffees/coffees.module';
 import appConfig from './config/app.config';
+import { APP_PIPE } from '@nestjs/core';
+import { CoffeeRatingService } from './coffee-rating/coffee-rating.service';
+import { CommonModule } from './common/common.module';
 // console.log('process.env.DATABASE_URL', process.env.DATABASE_URL);
 
 // const databaseString = process.env.DATABASE_URL;
@@ -35,9 +38,17 @@ import appConfig from './config/app.config';
         uri: `${process.env.DB_TYPE}://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}/${process.env.DB_NAME}?${process.env.DB_OPTIONS}`,
       }),
     }),
-    CoffeeRatingModule, // Remote
+    CoffeeRatingModule,
+    CommonModule, // Remote
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    CoffeeRatingService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    },
+  ],
 })
 export class AppModule {}
