@@ -1,53 +1,33 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel, InjectConnection } from '@nestjs/mongoose';
 import { Coffee } from './entities/coffee.entity';
 import { Connection, Model, ObjectId } from 'mongoose';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { PaginationQueryDto } from './../common/dto/pagination-query.dto';
-import { ConfigService, ConfigType } from '@nestjs/config';
-import coffeesConfig from './config/coffees.config';
-import { Event } from './entities/event.entity';
-// import { COFFEE_BRANDS } from './coffees.constants';
 
-// Sample implementation without a real database
-// Services hold the meat of our business logic along with interactions with data sources
+import { Event } from './entities/event.entity';
 
 @Injectable()
 export class CoffeesService {
   constructor(
     @InjectModel(Coffee.name) private readonly coffeeModel: Model<Coffee>,
     @InjectConnection() private readonly connection: Connection,
-    @InjectModel(Event.name) private readonly eventModel: Model<Event>, // Non ClassBased Provider
-    // private readonly configService: ConfigService, // @Inject(COFFEE_BRANDS) coffeeBrands: string[],
-    @Inject(coffeesConfig.KEY)
-    private readonly coffeesConfiguration: ConfigType<typeof coffeesConfig>,
-  ) {
-    // console.log(coffeeBrands);
-    // const databaseHost = this.configService.get('database.host');
-    // console.log(databaseHost);
-    // console.log(coffeesConfiguration.foo);
-  }
+    @InjectModel(Event.name) private readonly eventModel: Model<Event>,
+  ) {}
 
   findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
-    // return this.coffeeModel.find().skip(parsedOffset).limit(parsedLimit).exec();
+
     return this.coffeeModel.find().skip(offset).limit(limit).exec();
   }
 
   async findOne(id: string) {
-    try {
-      const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
-      return coffee;
-    } catch (error) {
+    const coffee = await this.coffeeModel.findOne({ _id: id }).exec();
+    if (!coffee) {
       throw new NotFoundException(`Coffee #${id} not found`);
     }
+    return coffee;
   }
 
   create(createCoffeeDto: CreateCoffeeDto) {
@@ -64,9 +44,14 @@ export class CoffeesService {
     }
     return existingCoffee;
   }
+
   async remove(id: string) {
-    const coffee = await this.findOne(id);
-    return coffee.deleteOne();
+    try {
+      const coffee = await this.findOne(id);
+      return coffee.deleteOne();
+    } catch (err) {
+      throw new NotFoundException(`Coffee #${id} not found`);
+    }
   }
 
   async recommendCoffee(coffee: Coffee) {
